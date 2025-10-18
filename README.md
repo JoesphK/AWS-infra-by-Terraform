@@ -4,7 +4,7 @@
 - [Overview](#overview)  
 - [Features](#features)  
 - [Architecture design](#Architecture-design)    
-
+- [How to use](#How-to-use)  
 
 ---
 
@@ -71,4 +71,12 @@ flowchart LR
     ROOT --> AWS
 ```
 ---  
-## 
+## How to use  
+- Download the code
+- Open the project in your perferred IDE, VScode is prefrable.
+- Adjust the blocks based on the layout provided by default.
+- Ensure you have a database with the correct permissions as well as a s3 bucket to store the terraform configuration there.
+- Run terraform plan, then terraform apply if there was no problem with the code.
+
+
+
