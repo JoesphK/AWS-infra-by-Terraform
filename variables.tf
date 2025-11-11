@@ -217,3 +217,230 @@ variable "coredns_config" {
   type    = map(any)
   default = {}
 }
+
+#==============================================Azure==========================
+# Azure Variables
+variable "azure_resource_group_name" {
+  description = "Name of the Azure Resource Group."
+  type        = string
+  default     = "Youssef-rg"
+}
+
+variable "azure_location" {
+  description = "Azure region for the Resource Group."
+  type        = string
+  default     = "East US"
+}
+
+variable "azure_tags" {
+  description = "Tags to apply to the Azure Resource Group."
+  type        = map(string)
+  default = {
+    WhomadeThis = "Youssef"
+  }
+}
+
+variable "azure_vnet_name" {
+  description = "Name of the Azure Virtual Network"
+  type        = string
+  default     = "Youssef-Network"
+}
+
+variable "azure_vnet_address_space" {
+  description = "The address space for the Azure Virtual Network."
+  type        = list(string)
+  default     = ["10.1.0.0/16"] # Ensure this is a broad enough range for your subnets
+}
+
+variable "azure_vnet_subnets" {
+  description = "A list of subnet configurations for the Azure Virtual Network."
+  type = list(object({
+    name             = string
+    address_prefixes = list(string)
+  }))
+  default = [
+    {
+      name             = "web-subnet"
+      address_prefixes = ["10.1.1.0/24"] # First subnet
+    },
+    {
+      name             = "app-subnet"
+      address_prefixes = ["10.1.2.0/24"] # Second subnet
+    },
+    # You can add more subnets here if needed
+  ]
+}
+
+# Azure Virtual Machine Variables
+variable "azure_vm_name" {
+  description = "The name of the Azure Virtual Machine."
+  type        = string
+  default     = "my-terraform-vm"
+}
+
+variable "azure_vm_assign_public_ip" {
+  description = "Whether to assign a public IP address to the VM."
+  type        = bool
+  default     = true
+}
+
+variable "azure_vm_os_type" {
+  description = "The OS type of the Virtual Machine (Linux or Windows)."
+  type        = string
+  default     = "Linux" # or "Windows"
+  validation {
+    condition     = contains(["Linux", "Windows"], var.azure_vm_os_type)
+    error_message = "The azure_vm_os_type must be 'Linux' or 'Windows'."
+  }
+}
+
+variable "azure_vm_image_publisher" {
+  description = "The publisher of the VM image."
+  type        = string
+  default     = "Canonical" # For Ubuntu: "Canonical", For Windows: "MicrosoftWindowsServer"
+}
+
+variable "azure_vm_image_offer" {
+  description = "The offer of the VM image."
+  type        = string
+  default     = "0001-com-ubuntu-server-jammy" # For Ubuntu 22.04: "0001-com-ubuntu-server-jammy", For Windows: "WindowsServer"
+}
+
+variable "azure_vm_image_sku" {
+  description = "The SKU of the VM image."
+  type        = string
+  default     = "22_04-lts-gen2" # For Ubuntu 22.04: "22_04-lts-gen2", For Windows: "2019-Datacenter"
+}
+
+variable "azure_vm_image_version" {
+  description = "The version of the VM image."
+  type        = string
+  default     = "latest"
+}
+
+variable "azure_vm_size" {
+  description = "The size of the Virtual Machine."
+  type        = string
+  default     = "Standard_B2s"
+}
+
+variable "azure_vm_admin_username" {
+  description = "The administrator username for the Virtual Machine."
+  type        = string
+  default     = "azureuser"
+}
+
+variable "azure_vm_admin_password" {
+  description = "The administrator password for Windows Virtual Machines, or for Linux Virtual Machines if no SSH key is provided. Required in these cases."
+  type        = string
+  default     = "GBGAcademy!" # Changed default to empty, as it's not always required.
+  sensitive   = true
+}
+
+variable "azure_vm_ssh_key_name" {
+  description = "The name of an *existing* Azure SSH Public Key resource for Linux Virtual Machines. If empty, password authentication will be enabled (if os_type is Linux)."
+  type        = string
+  default     = "YoussefAzureKey" # Default to empty, meaning no existing SSH key is used by default
+}
+
+variable "azure_vm_inbound_ports" {
+  description = "A list of inbound ports to allow on the VM's Network Security Group."
+  type        = list(number)
+  default     = [22, 80, 443] # Default for Linux: SSH, HTTP, HTTPS. For Windows: RDP, HTTP, HTTPS.
+}
+
+# Azure Virtual Machine Scale Set Variables
+variable "azure_vmss_name" {
+  description = "The name of the Azure Virtual Machine Scale Set."
+  type        = string
+  default     = "youssef-vmss"
+}
+
+variable "azure_vmss_assign_public_ip" {
+  description = "Whether to assign a public IP address to the VMSS Load Balancer."
+  type        = bool
+  default     = true
+}
+
+variable "azure_vmss_os_type" {
+  description = "The OS type of the Virtual Machine Scale Set instances (Linux or Windows)."
+  type        = string
+  default     = "Linux" # or "Windows"
+  validation {
+    condition     = contains(["Linux", "Windows"], var.azure_vmss_os_type)
+    error_message = "The azure_vmss_os_type must be 'Linux' or 'Windows'."
+  }
+}
+
+variable "azure_vmss_image_publisher" {
+  description = "The publisher of the VMSS image."
+  type        = string
+  default     = "Canonical" # For Ubuntu: "Canonical", For Windows: "MicrosoftWindowsServer"
+}
+
+variable "azure_vmss_image_offer" {
+  description = "The offer of the VMSS image."
+  type        = string
+  default     = "0001-com-ubuntu-server-jammy" # For Ubuntu 22.04: "0001-com-ubuntu-server-jammy", For Windows: "WindowsServer"
+}
+
+variable "azure_vmss_image_sku" {
+  description = "The SKU of the VMSS image."
+  type        = string
+  default     = "22_04-lts-gen2" # For Ubuntu 22.04: "22_04-lts-gen2", For Windows: "2019-Datacenter"
+}
+
+variable "azure_vmss_image_version" {
+  description = "The version of the VMSS image."
+  type        = string
+  default     = "latest"
+}
+
+variable "azure_vmss_size" {
+  description = "The size of the Virtual Machine Scale Set instances."
+  type        = string
+  default     = "Standard_B1ms"
+}
+
+variable "azure_vmss_admin_username" {
+  description = "The administrator username for the Virtual Machine Scale Set instances."
+  type        = string
+  default     = "azureuser"
+}
+
+variable "azure_vmss_admin_password" {
+  description = "The administrator password for Windows VMSS instances, or for Linux VMSS instances if no SSH key is provided. Required in these cases."
+  type        = string
+  default     = "GBGAcademy!" # Changed default to empty, as it's not always required.
+  sensitive   = true
+}
+
+variable "azure_vmss_ssh_key_name" {
+  description = "The name of an *existing* Azure SSH Public Key resource for Linux VMSS instances. If empty, the generated key will be used."
+  type        = string
+  default     = "" # <--- Ensure this is empty to use the generated key
+}
+
+variable "azure_vmss_inbound_ports" {
+  description = "A list of inbound ports to allow on the VMSS Network Security Group."
+  type        = list(number)
+  default     = [22, 80, 443] # <--- Added port 22
+}
+
+variable "azure_vmss_min_instance_count" {
+  description = "The minimum number of instances in the Virtual Machine Scale Set."
+  type        = number
+  default     = 2
+}
+
+variable "azure_vmss_max_instance_count" {
+  description = "The maximum number of instances in the Virtual Machine Scale Set."
+  type        = number
+  default     = 5
+}
+
+variable "azure_ssh_key_name_to_generate" {
+  description = "The name for the SSH key to be generated and stored in Azure."
+  type        = string
+  default     = "YoussefAzureKey"
+}
