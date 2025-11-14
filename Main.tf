@@ -18,7 +18,7 @@ terraform {
 # Configure the Azure Provider
 provider "azurerm" {
   features {}
-  subscription_id = "cad7b110-5cb4-433d-93fa-6db3d35b8a98" # Replace with the actual subscription ID you copied
+  subscription_id = "" # Replace with the actual subscription ID you copied
 }
 
 # Call the Azure Resource Group module
